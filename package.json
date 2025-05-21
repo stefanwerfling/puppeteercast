@@ -1,0 +1,30 @@
+{
+  "name": "puppeteercast",
+  "version": "1.0.0",
+  "description": "Turn your browser into a streaming server.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Stefan Werfling",
+  "license": "GPL-3.0-only",
+  "workspaces": [
+    "backend"
+  ],
+  "dependencies": {
+    "husky": "^9.0.11",
+    "jscanify": "^1.4.0"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin-ts": "^3.0.0",
+    "@types/node": "^20.17.16",
+    "@types/ws": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
+    "eslint": "^9.19.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "npm-check-updates": "^17.1.14",
+    "typescript": "^5.7.3"
+  }
+}

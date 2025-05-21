@@ -1,0 +1,23 @@
+services:
+  iptv:
+    image: puppeteercast:v1.1
+    build: .
+    container_name: puppeteercast_service
+    shm_size: '2gb'
+    mem_limit: '4g'
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    environment:
+      - DISPLAY=:99
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "50"
+    command:
+      - node
+      - "--inspect-brk=0.0.0.0:9229"
+      - "backend/dist/main.js"
+      - "--envargs=1"
