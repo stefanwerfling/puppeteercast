@@ -1,4 +1,4 @@
-import { ServiceStatus, StatusCodes } from 'figtree';
+import { Logger, ServiceStatus, StatusCodes, StringHelper } from 'figtree';
 import { Backend } from '../../../Application/Backend.js';
 import { PuppeteerService } from '../../../Service/PuppeteerService.js';
 export class PlayLoopTub {
@@ -29,17 +29,30 @@ export class PlayLoopTub {
                                         fullscreenButton.click();
                                     }
                                 });
+                                return {
+                                    statusCode: StatusCodes.OK,
+                                };
                             }
+                            return {
+                                statusCode: StatusCodes.INTERNAL_ERROR,
+                                msg: 'iframe not found!'
+                            };
                         }
                         catch (e) {
-                            console.log('Video konnte nicht gestartet werden:', e);
+                            const error = StringHelper.sprintf('Video can not start: %e', e);
+                            Logger.getLogger().error(error);
+                            return {
+                                statusCode: StatusCodes.INTERNAL_ERROR,
+                                msg: error
+                            };
                         }
                     }
                 }
             }
         }
         return {
-            statusCode: StatusCodes.OK,
+            statusCode: StatusCodes.INTERNAL_ERROR,
+            msg: 'Service or stream not ready!'
         };
     }
 }

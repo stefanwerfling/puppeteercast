@@ -2,6 +2,7 @@ import {ChildProcess, spawn} from 'child_process';
 import {Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper} from 'figtree';
 import {PactlService} from './PactlService.js';
 import {PulseAudioService} from './PulseAudioService.js';
+import {PassThrough} from 'stream';
 
 /**
  * Ffmpeg - Service
@@ -23,6 +24,12 @@ export class FfmpegService extends ServiceAbstract {
      * @protected
      */
     protected _ffmpeg: ChildProcess|null = null;
+
+    /**
+     * Broadcast Stream
+     * @protected
+     */
+    protected _boradcast: PassThrough = new PassThrough();
 
     /**
      * Constructor
@@ -65,6 +72,8 @@ export class FfmpegService extends ServiceAbstract {
 
             if (this._ffmpeg !== null) {
                 if (this._ffmpeg.stdout !== null) {
+                    this._ffmpeg.stdout.pipe(this._boradcast);
+
                     this._ffmpeg.stdout.on('data', (data) => {
                         //Logger.getLogger().info(`FfmpegService [Ffmpeg stdout]: Data-Len: ${data.toString().trim().length}`);
                     });
@@ -105,6 +114,14 @@ export class FfmpegService extends ServiceAbstract {
      */
     public getFfmpegProcess(): ChildProcess|null {
         return this._ffmpeg;
+    }
+
+    /**
+     * Return the boradcast stream
+     * @return {PassThrough}
+     */
+    public getBroadcastStream(): PassThrough {
+        return this._boradcast;
     }
 
 }
