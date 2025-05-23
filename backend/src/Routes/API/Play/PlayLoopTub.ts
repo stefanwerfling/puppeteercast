@@ -19,6 +19,11 @@ export class PlayLoopTub {
                         await page.goto(`https://looptube.io/?videoId=${param.videoid}`, {waitUntil: 'networkidle2'});
 
                         try {
+                            await page.evaluate(() => {
+                                // eslint-disable-next-line no-undef
+                                document.body.style.cursor = 'none';
+                            });
+
                             const frameHandle = await page.waitForSelector('iframe');
 
                             if (frameHandle) {

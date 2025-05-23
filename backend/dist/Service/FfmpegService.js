@@ -2,10 +2,12 @@ import { spawn } from 'child_process';
 import { Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper } from 'figtree';
 import { PactlService } from './PactlService.js';
 import { PulseAudioService } from './PulseAudioService.js';
+import { PassThrough } from 'stream';
 export class FfmpegService extends ServiceAbstract {
     static NAME = 'ffmpeg';
     _importance = ServiceImportance.Important;
     _ffmpeg = null;
+    _boradcast = new PassThrough();
     constructor() {
         super(FfmpegService.NAME, [PactlService.NAME]);
     }
@@ -35,6 +37,7 @@ export class FfmpegService extends ServiceAbstract {
             });
             if (this._ffmpeg !== null) {
                 if (this._ffmpeg.stdout !== null) {
+                    this._ffmpeg.stdout.pipe(this._boradcast);
                     this._ffmpeg.stdout.on('data', (data) => {
                     });
                 }
@@ -61,6 +64,9 @@ export class FfmpegService extends ServiceAbstract {
     }
     getFfmpegProcess() {
         return this._ffmpeg;
+    }
+    getBroadcastStream() {
+        return this._boradcast;
     }
 }
 //# sourceMappingURL=FfmpegService.js.map

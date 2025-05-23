@@ -28,6 +28,8 @@ export class PuppeteerService extends ServiceAbstract {
                 args: [
                     '--no-sandbox',
                     '--disable-infobars',
+                    '--cursor=none',
+                    '--enable-features=HideCursor',
                     '--disable-setuid-sandbox',
                     '--autoplay-policy=no-user-gesture-required',
                     '--use-gl=egl',

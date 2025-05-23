@@ -30,6 +30,26 @@ export class XvfbService extends ServiceAbstract {
     }
 
     /**
+     * Hide the cursor
+     * @protected
+     */
+    protected async _hideCursor(): Promise<void> {
+        const unclutter = spawn(
+            'unclutter',
+            ['-idle', '1', '-root'],
+            {
+                env: {
+                    DISPLAY: ':99'
+                }
+            }
+        );
+
+        unclutter.on('error', (err) => {
+            console.error('unclutter error:', err);
+        });
+    }
+
+    /**
      * Start the service
      */
     public override async start(): Promise<void> {
@@ -59,6 +79,12 @@ export class XvfbService extends ServiceAbstract {
                 this._xvfb.on('close', (code) => {
                     Logger.getLogger().warn(`XvfbService: Xvfb process exited with code ${code}`);
                 });
+
+                await new Promise(resolve => {
+                    setTimeout(resolve, 10000);
+                });
+
+                await this._hideCursor();
             }
         } catch(error) {
             this._status = ServiceStatus.Error;

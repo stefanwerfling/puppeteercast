@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y \
   x11-utils \
   dbus-x11 \
   xauth \
+  unclutter \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
