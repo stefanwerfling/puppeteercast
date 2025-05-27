@@ -1,8 +1,8 @@
 import {ChildProcess, spawn} from 'child_process';
 import {Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper} from 'figtree';
+import {BufferedStream} from '../Stream/BufferedStream.js';
 import {PactlService} from './PactlService.js';
 import {PulseAudioService} from './PulseAudioService.js';
-import {PassThrough} from 'stream';
 
 /**
  * Ffmpeg - Service
@@ -29,7 +29,7 @@ export class FfmpegService extends ServiceAbstract {
      * Broadcast Stream
      * @protected
      */
-    protected _boradcast: PassThrough = new PassThrough();
+    protected _boradcast: BufferedStream = new BufferedStream(300);
 
     /**
      * Constructor
@@ -134,9 +134,9 @@ export class FfmpegService extends ServiceAbstract {
 
     /**
      * Return the boradcast stream
-     * @return {PassThrough}
+     * @return {BufferedStream}
      */
-    public getBroadcastStream(): PassThrough {
+    public getBroadcastStream(): BufferedStream {
         return this._boradcast;
     }
 

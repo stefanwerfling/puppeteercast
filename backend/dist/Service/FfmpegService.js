@@ -1,13 +1,13 @@
 import { spawn } from 'child_process';
 import { Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper } from 'figtree';
+import { BufferedStream } from '../Stream/BufferedStream.js';
 import { PactlService } from './PactlService.js';
 import { PulseAudioService } from './PulseAudioService.js';
-import { PassThrough } from 'stream';
 export class FfmpegService extends ServiceAbstract {
     static NAME = 'ffmpeg';
     _importance = ServiceImportance.Important;
     _ffmpeg = null;
-    _boradcast = new PassThrough();
+    _boradcast = new BufferedStream(300);
     constructor() {
         super(FfmpegService.NAME, [PactlService.NAME]);
     }

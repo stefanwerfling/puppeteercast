@@ -1,5 +1,4 @@
 import { DefaultRoute, Logger, ServiceStatus } from 'figtree';
-import { PassThrough } from 'stream';
 import { Backend } from '../../Application/Backend.js';
 import { SchemaStreamRequestPath } from '../../Schemas/Routes/Stream/Stream.js';
 import { FfmpegService } from '../../Service/FfmpegService.js';
@@ -14,9 +13,8 @@ export class Stream extends DefaultRoute {
                 const service = backend.getServiceList().getByName(FfmpegService.NAME);
                 if (service) {
                     if (service.getStatus() === ServiceStatus.Success) {
-                        const clientStream = new PassThrough();
                         const broadcast = service.getBroadcastStream();
-                        broadcast.pipe(clientStream);
+                        const clientStream = broadcast.getReadableStream();
                         res.writeHead(200, {
                             'Content-Type': 'video/mp2t',
                             'Connection': 'keep-alive',
@@ -25,7 +23,6 @@ export class Stream extends DefaultRoute {
                         clientStream.pipe(res);
                         req.on('close', () => {
                             clientStream.unpipe(res);
-                            clientStream.end();
                         });
                         return;
                     }
