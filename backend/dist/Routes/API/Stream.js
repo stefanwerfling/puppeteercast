@@ -1,10 +1,14 @@
-import { DefaultRoute, ServiceStatus } from 'figtree';
+import { DefaultRoute, Logger, ServiceStatus } from 'figtree';
 import { PassThrough } from 'stream';
 import { Backend } from '../../Application/Backend.js';
+import { SchemaStreamRequestPath } from '../../Schemas/Routes/Stream/Stream.js';
 import { FfmpegService } from '../../Service/FfmpegService.js';
 export class Stream extends DefaultRoute {
     getExpressRouter() {
-        this._get('/stream', false, async (req, res) => {
+        this._get('/stream/:channel.ts', false, async (req, res, data) => {
+            if (data.params) {
+                Logger.getLogger().info(`Channel run: ${data.params.channel}`);
+            }
             const backend = Backend.getInstance(Backend.NAME);
             if (backend) {
                 const service = backend.getServiceList().getByName(FfmpegService.NAME);
@@ -23,12 +27,19 @@ export class Stream extends DefaultRoute {
                             clientStream.unpipe(res);
                             clientStream.end();
                         });
+                        return;
                     }
                 }
             }
-            res.status(500).send('Error stream not ready!');
+            res.writeHead(200, {
+                'Content-Type': 'video/mp2t',
+                'Connection': 'keep-alive',
+                'Cache-Control': 'no-cache',
+            });
+            res.end();
         }, {
-            description: 'Current browser stream'
+            description: 'Current browser stream',
+            pathSchema: SchemaStreamRequestPath
         });
         return super.getExpressRouter();
     }

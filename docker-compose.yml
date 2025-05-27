@@ -8,6 +8,8 @@ services:
     ports:
       - "3000:3000"
       - "9229:9229"
+      - "1900:1900/udp"
+      - "5004:5004"
     environment:
       - DISPLAY=:99
     restart: unless-stopped

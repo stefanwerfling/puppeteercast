@@ -1,4 +1,4 @@
-import { DirHelper, Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper } from 'figtree';
+import { DirHelper, FileHelper, Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper } from 'figtree';
 import { spawn } from 'child_process';
 export class XvfbService extends ServiceAbstract {
     static NAME = 'xvfb';
@@ -23,6 +23,10 @@ export class XvfbService extends ServiceAbstract {
         try {
             if (!await DirHelper.directoryExist('/tmp/.X11-unix')) {
                 await DirHelper.mkdir('/tmp/.X11-unix', true);
+            }
+            if (await FileHelper.fileExist('/tmp/.X99-lock')) {
+                Logger.getLogger().info('XvfbService old /tmp/.X99-lock exist and delete');
+                await FileHelper.fileDelete('/tmp/.X99-lock');
             }
             this._xvfb = spawn('Xvfb', [':99', '-screen', '0', '1280x720x24'], { stdio: ['ignore', 'pipe', 'pipe'] });
             if (this._xvfb !== null) {

@@ -38,11 +38,14 @@ export class PuppeteerCastConfig extends ConfigBackend {
                     }
                 },
                 logging: {
-                    level: 'info'
+                    level: 'silly'
                 },
                 httpserver: {
                     port: 3000,
                     publicdir: './public',
+                    proxy: {
+                        trust: true
+                    }
                 }
             };
         }

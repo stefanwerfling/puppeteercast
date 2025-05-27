@@ -1,0 +1,1 @@
+{"version":3,"file":"Stream.js","sourceRoot":"","sources":["../../../../src/Schemas/Routes/Stream/Stream.ts"],"names":[],"mappings":"AAAA,OAAO,EAA0B,GAAG,EAAC,MAAM,KAAK,CAAC;AAEjD,MAAM,CAAC,MAAM,uBAAuB,GAAG,GAAG,CAAC,MAAM,CAAC;IAC9C,OAAO,EAAE,GAAG,CAAC,MAAM,CAAC,EAAC,WAAW,EAAE,iBAAiB,EAAC,CAAC;CACxD,EAAE,EAAC,WAAW,EAAE,gBAAgB,EAAC,CAAC,CAAC"}

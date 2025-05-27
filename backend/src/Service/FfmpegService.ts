@@ -47,21 +47,37 @@ export class FfmpegService extends ServiceAbstract {
 
         try {
             this._ffmpeg = spawn('ffmpeg', [
+                '-thread_queue_size', '64',
                 '-f', 'x11grab',
                 '-r', '30',
                 '-s', '1280x720',
                 '-i', ':99',
-                '-probesize', '10M',
-                '-analyzeduration', '5M',
 
                 '-f', 'pulse',
                 '-i', 'stream_sink.monitor',
 
+                '-fflags', '+genpts',
+                '-use_wallclock_as_timestamps', '1',
+
+                '-pix_fmt', 'yuv420p',
+
                 '-c:v', 'libx264',
-                '-preset', 'ultrafast',
+                '-preset', 'superfast',
                 '-tune', 'zerolatency',
 
+                '-profile:v', 'baseline',
+                '-level:v', '3.1',
+
+                '-g', '60',
+                '-keyint_min', '60',
+                '-sc_threshold', '0',
+
                 '-c:a', 'aac',
+                '-b:a', '128k',
+                '-ar', '44100',
+
+                '-mpegts_flags', '+resend_headers+initial_discontinuity',
+
                 '-f', 'mpegts',
                 'pipe:1'
             ], {
