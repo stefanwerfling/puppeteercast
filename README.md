@@ -38,5 +38,11 @@ The core transformation process involves running a web browser in a virtual disp
 - [ ] Plugin-System
 - [ ] Frontend?
 
+# Sample see stream on other client
+Movie from the site (Pupetteer) -> HDHomeRun -> Somthing Media Server -> Somthing Client on the mobile phone
+
+<img height="300" src="doc/images/client_forstream.png">
+
+
 ### Sources
 - <a href="https://www.flaticon.com/free-icons/cast" title="cast icons">Cast icons created by Google - Flaticon</a>
