@@ -1,6 +1,6 @@
 services:
   iptv:
-    image: puppeteercast:v1.1
+    image: puppeteercast:v1.2
     build: .
     container_name: puppeteercast_service
     shm_size: '2gb'

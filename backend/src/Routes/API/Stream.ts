@@ -4,6 +4,9 @@ import {Backend} from '../../Application/Backend.js';
 import {SchemaStreamRequestPath} from '../../Schemas/Routes/Stream/Stream.js';
 import {FfmpegService} from '../../Service/FfmpegService.js';
 
+/**
+ * Stream Route
+ */
 export class Stream extends DefaultRoute {
 
     /**
@@ -19,13 +22,14 @@ export class Stream extends DefaultRoute {
                 res,
                 data
             ): Promise<void> => {
-                if (data.params) {
-                    Logger.getLogger().info(`Channel run: ${data.params.channel}`);
-                }
-
-                const backend = Backend.getInstance(Backend.NAME);
+                const backend = Backend.getInstance(Backend.NAME) as Backend;
 
                 if (backend) {
+                    if (data.params) {
+                        Logger.getLogger().info(`Channel run: ${data.params.channel}`);
+                        backend.getChannelManager().callChannel(data.params.channel).then();
+                    }
+
                     const service = backend.getServiceList().getByName(FfmpegService.NAME);
 
                     if (service) {

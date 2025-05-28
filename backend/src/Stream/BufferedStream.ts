@@ -1,6 +1,9 @@
 import {Logger} from 'figtree';
 import { Writable, PassThrough } from 'stream';
 
+/**
+ * Buffered Stream (RingBuffer)
+ */
 export class BufferedStream extends Writable {
 
     /**
@@ -31,6 +34,12 @@ export class BufferedStream extends Writable {
         this._consumer = new PassThrough();
     }
 
+    /**
+     * Write
+     * @param {Buffer} chunk
+     * @param {string} _encoding
+     * @param {function} callback
+     */
     public _write(chunk: Buffer, _encoding: string, callback: (error?: Error | null) => void): void {
         if (this._buffer.length >= this._maxChunks) {
             Logger.getLogger().info(`BufferedStream:_write: clear buffer ${this._buffer.length} >= ${this._maxChunks}`);
@@ -42,6 +51,10 @@ export class BufferedStream extends Writable {
         callback();
     }
 
+    /**
+     * Flush Buffer
+     * @protected
+     */
     protected _flushBuffer(): void {
         while (this._buffer.length > 0 && this._consumer.writableLength < 1024 * 1024) {
             const chunk = this._buffer.shift();
@@ -52,10 +65,17 @@ export class BufferedStream extends Writable {
         }
     }
 
+    /**
+     * Return the readable stream
+     * @return {PassThrough}
+     */
     public getReadableStream(): PassThrough {
         return this._consumer;
     }
 
+    /**
+     * End consumer
+     */
     public endConsumer(): void {
         this._consumer.end();
     }

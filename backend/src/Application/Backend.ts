@@ -1,5 +1,6 @@
 import {BackendApp, ConfigOptions, DefaultArgs, Config, SchemaDefaultArgs, HttpService} from 'figtree';
 import {Schema} from 'vts';
+import {ChannelManager} from '../Channels/ChannelManager.js';
 import {PuppeteerCastConfig} from '../Config/PuppeteerCastConfig.js';
 import {RouteLoader} from '../Routes/RouteLoader.js';
 import {FfmpegService} from '../Service/FfmpegService.js';
@@ -18,6 +19,12 @@ export class Backend extends BackendApp<DefaultArgs, ConfigOptions> {
      * Backend Name
      */
     public static NAME = 'puppeteercast';
+
+    /**
+     * Channel Manager
+     * @protected
+     */
+    protected _channelManager: ChannelManager = new ChannelManager();
 
     /**
      * Get config instacne
@@ -52,6 +59,7 @@ export class Backend extends BackendApp<DefaultArgs, ConfigOptions> {
      * @protected
      */
     protected async _initServices(): Promise<void> {
+        //this._serviceList.add(new P)
         this._serviceList.add(new XvfbService());
         this._serviceList.add(new PulseAudioService());
         this._serviceList.add(new PuppeteerService());
@@ -59,6 +67,14 @@ export class Backend extends BackendApp<DefaultArgs, ConfigOptions> {
         this._serviceList.add(new FfmpegService());
         this._serviceList.add(new HttpService(RouteLoader));
         this._serviceList.add(new HDHomeRunService());
+    }
+
+    /**
+     * Return the channel manager
+     * @return {ChannelManager}
+     */
+    public getChannelManager(): ChannelManager {
+        return this._channelManager;
     }
 
 }

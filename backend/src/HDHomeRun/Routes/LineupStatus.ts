@@ -2,8 +2,15 @@ import {Router} from 'express';
 import {DefaultRoute} from 'figtree';
 import {LineupStatusResponse, SchemaLineupStatusResponse} from '../../Schemas/Routes/Lineup/LineupStatus.js';
 
+/**
+ * Lineup Status Route
+ */
 export class LineupStatus extends DefaultRoute {
 
+    /**
+     * Return the express router
+     * @return {Router}
+     */
     public getExpressRouter(): Router {
         this._get(
             '/lineup_status.json',

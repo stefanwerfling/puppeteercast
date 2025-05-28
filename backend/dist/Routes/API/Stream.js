@@ -5,11 +5,12 @@ import { FfmpegService } from '../../Service/FfmpegService.js';
 export class Stream extends DefaultRoute {
     getExpressRouter() {
         this._get('/stream/:channel.ts', false, async (req, res, data) => {
-            if (data.params) {
-                Logger.getLogger().info(`Channel run: ${data.params.channel}`);
-            }
             const backend = Backend.getInstance(Backend.NAME);
             if (backend) {
+                if (data.params) {
+                    Logger.getLogger().info(`Channel run: ${data.params.channel}`);
+                    backend.getChannelManager().callChannel(data.params.channel).then();
+                }
                 const service = backend.getServiceList().getByName(FfmpegService.NAME);
                 if (service) {
                     if (service.getStatus() === ServiceStatus.Success) {

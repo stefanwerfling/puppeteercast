@@ -7,6 +7,9 @@ import {Lineup} from './Routes/Lineup.js';
 import {LineupStatus} from './Routes/LineupStatus.js';
 import {SsdpServerMediaServer} from './Ssdp/SsdpServerMediaServer.js';
 
+/**
+ * HDHomeRun
+ */
 export class HDHomeRun {
 
     /**
@@ -15,8 +18,15 @@ export class HDHomeRun {
      */
     protected _httpServer: BaseHttpServer;
 
+    /**
+     * SSDP Server
+     * @protected
+     */
     protected _ssdp: SsdpServerMediaServer;
 
+    /**
+     * Constructor
+     */
     public constructor() {
         const hdhruuid = 'hdhomerun-puppeteercast';
         const httpPort = 5004;
@@ -47,6 +57,9 @@ export class HDHomeRun {
         this._ssdp = new SsdpServerMediaServer(1900, httpPort, hdhruuid);
     }
 
+    /**
+     * Start the HDHomeRun (listen, ...)
+     */
     public async start(): Promise<void> {
         await this._httpServer.listen();
         this._ssdp.start();

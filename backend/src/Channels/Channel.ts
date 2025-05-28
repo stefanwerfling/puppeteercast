@@ -1,7 +1,7 @@
 /**
  * Stream channel
  */
-export type StreamChannel = {
+export type Channel = {
     name: string;
     id: string;
     provider: string;
