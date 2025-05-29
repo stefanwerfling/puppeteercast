@@ -1,5 +1,5 @@
 import {ChildProcess, spawn} from 'child_process';
-import {DirHelper, Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper} from 'figtree';
+import {DirHelper, FileHelper, Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper} from 'figtree';
 import { homedir } from 'os';
 import path from 'path';
 
@@ -37,6 +37,21 @@ export class PulseAudioService extends ServiceAbstract {
     }
 
     /**
+     * Clear old files from pulseAudio
+     * @param {string} appRuntimePath
+     * @protected
+     */
+    protected async _cleanPulseRuntime(appRuntimePath: string): Promise<void> {
+        if (await DirHelper.directoryExist(appRuntimePath)) {
+            const files = await DirHelper.getFiles(appRuntimePath);
+
+            for await (const file of files) {
+                await FileHelper.fileDelete(path.join(appRuntimePath, file));
+            }
+        }
+    }
+
+    /**
      * Start the service
      */
     public override async start(): Promise<void> {
@@ -45,9 +60,12 @@ export class PulseAudioService extends ServiceAbstract {
 
         try {
             const pulsePath = path.join(homedir(), '.config', 'pulse');
+            const pulseRuntimePath = PulseAudioService.APP_RUNTIME_PATH;
 
-            if (!await DirHelper.directoryExist(PulseAudioService.APP_RUNTIME_PATH)) {
-                await DirHelper.mkdir(PulseAudioService.APP_RUNTIME_PATH, true);
+            await this._cleanPulseRuntime(pulseRuntimePath);
+
+            if (!await DirHelper.directoryExist(pulseRuntimePath)) {
+                await DirHelper.mkdir(pulseRuntimePath, true);
             }
 
             if (!await DirHelper.directoryExist(pulsePath)) {
@@ -63,7 +81,7 @@ export class PulseAudioService extends ServiceAbstract {
                 '--log-level=info'
             ], {
                 env: {
-                    PULSE_RUNTIME_PATH: PulseAudioService.APP_RUNTIME_PATH,
+                    PULSE_RUNTIME_PATH: pulseRuntimePath,
                     PULSE_NO_CONFIG: '1',
                     PULSE_NO_MODULE_INIT: '1'
                 },

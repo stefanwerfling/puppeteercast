@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { DirHelper, Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper } from 'figtree';
+import { DirHelper, FileHelper, Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper } from 'figtree';
 import { homedir } from 'os';
 import path from 'path';
 export class PulseAudioService extends ServiceAbstract {
@@ -10,13 +10,23 @@ export class PulseAudioService extends ServiceAbstract {
     constructor() {
         super(PulseAudioService.NAME);
     }
+    async _cleanPulseRuntime(appRuntimePath) {
+        if (await DirHelper.directoryExist(appRuntimePath)) {
+            const files = await DirHelper.getFiles(appRuntimePath);
+            for await (const file of files) {
+                await FileHelper.fileDelete(path.join(appRuntimePath, file));
+            }
+        }
+    }
     async start() {
         this._inProcess = true;
         this._status = ServiceStatus.Progress;
         try {
             const pulsePath = path.join(homedir(), '.config', 'pulse');
-            if (!await DirHelper.directoryExist(PulseAudioService.APP_RUNTIME_PATH)) {
-                await DirHelper.mkdir(PulseAudioService.APP_RUNTIME_PATH, true);
+            const pulseRuntimePath = PulseAudioService.APP_RUNTIME_PATH;
+            await this._cleanPulseRuntime(pulseRuntimePath);
+            if (!await DirHelper.directoryExist(pulseRuntimePath)) {
+                await DirHelper.mkdir(pulseRuntimePath, true);
             }
             if (!await DirHelper.directoryExist(pulsePath)) {
                 await DirHelper.mkdir(pulsePath, true);
@@ -30,7 +40,7 @@ export class PulseAudioService extends ServiceAbstract {
                 '--log-level=info'
             ], {
                 env: {
-                    PULSE_RUNTIME_PATH: PulseAudioService.APP_RUNTIME_PATH,
+                    PULSE_RUNTIME_PATH: pulseRuntimePath,
                     PULSE_NO_CONFIG: '1',
                     PULSE_NO_MODULE_INIT: '1'
                 },

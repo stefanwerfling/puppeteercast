@@ -74,5 +74,26 @@ export class PuppeteerService extends ServiceAbstract {
     getPage() {
         return this._page;
     }
+    async stop(forced = false) {
+        try {
+            if (this._browse) {
+                if (this._page) {
+                    await this._page.close();
+                    this._page = null;
+                }
+                await this._browse.close();
+                this._browse = null;
+            }
+        }
+        catch (error) {
+            this._status = ServiceStatus.Error;
+            this._statusMsg = StringHelper.sprintf('PuppeteerService::stop: Error stopping the Puppeteer: %e', error);
+            Logger.getLogger().error(this._statusMsg);
+        }
+        finally {
+            this._status = ServiceStatus.None;
+            this._inProcess = false;
+        }
+    }
 }
 //# sourceMappingURL=PuppeteerService.js.map

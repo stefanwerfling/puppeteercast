@@ -1,4 +1,4 @@
-import {BackendApp, ConfigOptions, DefaultArgs, Config, SchemaDefaultArgs, HttpService} from 'figtree';
+import {BackendApp, ConfigOptions, DefaultArgs, Config, SchemaDefaultArgs, HttpService, PluginService} from 'figtree';
 import {Schema} from 'vts';
 import {ChannelManager} from '../Channels/ChannelManager.js';
 import {PuppeteerCastConfig} from '../Config/PuppeteerCastConfig.js';
@@ -59,7 +59,7 @@ export class Backend extends BackendApp<DefaultArgs, ConfigOptions> {
      * @protected
      */
     protected async _initServices(): Promise<void> {
-        //this._serviceList.add(new P)
+        this._serviceList.add(new PluginService(Backend.NAME));
         this._serviceList.add(new XvfbService());
         this._serviceList.add(new PulseAudioService());
         this._serviceList.add(new PuppeteerService());

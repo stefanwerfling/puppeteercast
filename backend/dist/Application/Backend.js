@@ -1,4 +1,4 @@
-import { BackendApp, SchemaDefaultArgs, HttpService } from 'figtree';
+import { BackendApp, SchemaDefaultArgs, HttpService, PluginService } from 'figtree';
 import { ChannelManager } from '../Channels/ChannelManager.js';
 import { PuppeteerCastConfig } from '../Config/PuppeteerCastConfig.js';
 import { RouteLoader } from '../Routes/RouteLoader.js';
@@ -24,6 +24,7 @@ export class Backend extends BackendApp {
         return SchemaDefaultArgs;
     }
     async _initServices() {
+        this._serviceList.add(new PluginService(Backend.NAME));
         this._serviceList.add(new XvfbService());
         this._serviceList.add(new PulseAudioService());
         this._serviceList.add(new PuppeteerService());
