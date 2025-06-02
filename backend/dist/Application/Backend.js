@@ -3,7 +3,7 @@ import { ChannelManager } from '../Channels/ChannelManager.js';
 import { PuppeteerCastConfig } from '../Config/PuppeteerCastConfig.js';
 import { RouteLoader } from '../Routes/RouteLoader.js';
 import { FfmpegService } from '../Service/FfmpegService.js';
-import { HDHomeRunService } from '../Service/HDHomeRunService.js';
+import { DLNAService } from '../Service/DLNAService.js';
 import { PactlService } from '../Service/PactlService.js';
 import { PulseAudioService } from '../Service/PulseAudioService.js';
 import { PuppeteerService } from '../Service/PuppeteerService.js';
@@ -31,7 +31,7 @@ export class Backend extends BackendApp {
         this._serviceList.add(new PactlService());
         this._serviceList.add(new FfmpegService());
         this._serviceList.add(new HttpService(RouteLoader));
-        this._serviceList.add(new HDHomeRunService());
+        this._serviceList.add(new DLNAService());
     }
     getChannelManager() {
         return this._channelManager;

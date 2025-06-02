@@ -6,7 +6,7 @@ export class Lineup extends DefaultRoute {
 
     public getExpressRouter(): Router {
         this._get(
-            '/lineup.json',
+            '/dms/lineup.json',
             false,
             async(request): Promise<LineupResponse> => {
                 const list: LinupEntry[] = [];
@@ -31,7 +31,7 @@ export class Lineup extends DefaultRoute {
                 return list;
             },
             {
-                description: 'HDHomeRun lineup.json',
+                description: 'DLNA lineup.json',
                 responseBodySchema: SchemaLineupResponse
             }
         );

@@ -10,27 +10,28 @@ export class PlayLoopTub {
                 if (service.getStatus() === ServiceStatus.Success) {
                     const page = service.getPage();
                     if (page) {
-                        await page.goto(`https://looptube.io/?videoId=${param.videoid}`, { waitUntil: 'networkidle2' });
+                        await page.getPage().goto(`https://looptube.io/?videoId=${param.videoid}`, { waitUntil: 'networkidle2' });
                         try {
-                            await page.evaluate(() => {
+                            await page.getPage().evaluate(() => {
                                 document.body.style.cursor = 'none';
                             });
-                            const frameHandle = await page.waitForSelector('iframe');
+                            const frameHandle = await page.getPage().waitForSelector('iframe#player');
                             if (frameHandle) {
                                 const frame = await frameHandle.contentFrame();
                                 if (!frame) {
                                     throw new Error('No iframe found!');
                                 }
-                                await frame.waitForSelector('.html5-video-player', { timeout: 15000 });
-                                await frame.evaluate(() => {
-                                    const video = document.querySelector('video');
-                                    if (video) {
-                                        video.play();
-                                    }
-                                    const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
-                                    if (fullscreenButton instanceof HTMLElement) {
-                                        fullscreenButton.click();
-                                    }
+                                page.selectorWaiter(frame, '.html5-video-player').then(async () => {
+                                    await frame.evaluate(() => {
+                                        const video = document.querySelector('video');
+                                        if (video) {
+                                            video.play();
+                                        }
+                                        const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
+                                        if (fullscreenButton instanceof HTMLElement) {
+                                            fullscreenButton.click();
+                                        }
+                                    });
                                 });
                                 return {
                                     statusCode: StatusCodes.OK,

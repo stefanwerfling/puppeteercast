@@ -42,7 +42,7 @@ export class BufferedStream extends Writable {
      */
     public _write(chunk: Buffer, _encoding: string, callback: (error?: Error | null) => void): void {
         if (this._buffer.length >= this._maxChunks) {
-            Logger.getLogger().info(`BufferedStream:_write: clear buffer ${this._buffer.length} >= ${this._maxChunks}`);
+            //Logger.getLogger().silly(`BufferedStream:_write: clear buffer ${this._buffer.length} >= ${this._maxChunks}`);
             this._buffer.shift();
         }
 

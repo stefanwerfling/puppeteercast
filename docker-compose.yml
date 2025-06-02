@@ -1,15 +1,11 @@
 services:
   iptv:
-    image: puppeteercast:v1.2
+    image: puppeteercast:v1.3
     build: .
     container_name: puppeteercast_service
     shm_size: '2gb'
     mem_limit: '4g'
-    ports:
-      - "3000:3000"
-      - "9229:9229"
-      - "1900:1900/udp"
-      - "5004:5004"
+    network_mode: host
     environment:
       - DISPLAY=:99
     restart: unless-stopped

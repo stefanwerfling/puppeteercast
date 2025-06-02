@@ -2,6 +2,7 @@ import {Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper}
 import {Browser, Page} from 'puppeteer';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import {PuppeteerCastPage} from '../Puppeteer/PuppeteerCastPage.js';
 import {PactlService} from './PactlService.js';
 import {PulseAudioService} from './PulseAudioService.js';
 import {XvfbService} from './XvfbService.js';
@@ -31,7 +32,7 @@ export class PuppeteerService extends ServiceAbstract {
      * Page
      * @protected
      */
-    protected _page: Page|null = null;
+    protected _page: PuppeteerCastPage|null = null;
 
     /**
      * Constructor
@@ -95,13 +96,7 @@ export class PuppeteerService extends ServiceAbstract {
             });
 
             if (this._browse) {
-                this._page = await this._browse.newPage();
-
-                this._page.on('console', msg => {
-                    Logger.getLogger().info(`PuppeteerService: BROWSER LOG: ${msg.type().toUpperCase()} ${msg.text()}`);
-                });
-
-                await this._page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36');
+                this._page = new PuppeteerCastPage(await this._browse.newPage());
             }
         } catch(error) {
             this._status = ServiceStatus.Error;
@@ -123,10 +118,10 @@ export class PuppeteerService extends ServiceAbstract {
     }
 
     /**
-     * Return the current page
-     * @return {Page|null}
+     * Return the current cast page
+     * @return {PuppeteerCastPage|null}
      */
-    public getPage(): Page|null {
+    public getPage(): PuppeteerCastPage|null {
         return this._page;
     }
 
@@ -138,7 +133,7 @@ export class PuppeteerService extends ServiceAbstract {
         try {
             if (this._browse) {
                 if (this._page) {
-                    await this._page.close();
+                    await this._page.getPage().close();
                     this._page = null;
                 }
 

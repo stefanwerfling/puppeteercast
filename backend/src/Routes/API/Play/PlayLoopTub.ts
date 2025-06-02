@@ -16,15 +16,15 @@ export class PlayLoopTub {
                     const page = (service as PuppeteerService).getPage();
 
                     if (page) {
-                        await page.goto(`https://looptube.io/?videoId=${param.videoid}`, {waitUntil: 'networkidle2'});
+                        await page.getPage().goto(`https://looptube.io/?videoId=${param.videoid}`, {waitUntil: 'networkidle2'});
 
                         try {
-                            await page.evaluate(() => {
+                            await page.getPage().evaluate(() => {
                                 // eslint-disable-next-line no-undef
                                 document.body.style.cursor = 'none';
                             });
 
-                            const frameHandle = await page.waitForSelector('iframe');
+                            const frameHandle = await page.getPage().waitForSelector('iframe#player');
 
                             if (frameHandle) {
                                 const frame = await frameHandle.contentFrame();
@@ -33,22 +33,22 @@ export class PlayLoopTub {
                                     throw new Error('No iframe found!');
                                 }
 
-                                await frame.waitForSelector('.html5-video-player', { timeout: 15000 });
+                                page.selectorWaiter(frame, '.html5-video-player').then(async() => {
+                                    await frame.evaluate(() => {
+                                        // eslint-disable-next-line no-undef
+                                        const video = document.querySelector('video') as HTMLVideoElement;
+                                        if (video) {
+                                            video.play();
+                                        }
 
-                                await frame.evaluate(() => {
-                                    // eslint-disable-next-line no-undef
-                                    const video = document.querySelector('video') as HTMLVideoElement;
-                                    if (video) {
-                                        video.play();
-                                    }
+                                        // eslint-disable-next-line no-undef
+                                        const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
 
-                                    // eslint-disable-next-line no-undef
-                                    const fullscreenButton = document.querySelector('.ytp-fullscreen-button');
-
-                                    // eslint-disable-next-line no-undef
-                                    if (fullscreenButton instanceof HTMLElement) {
-                                        fullscreenButton.click();
-                                    }
+                                        // eslint-disable-next-line no-undef
+                                        if (fullscreenButton instanceof HTMLElement) {
+                                            fullscreenButton.click();
+                                        }
+                                    });
                                 });
 
                                 return {

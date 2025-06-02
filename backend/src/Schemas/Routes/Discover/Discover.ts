@@ -1,6 +1,8 @@
 import {ExtractSchemaResultType, Vts} from 'vts';
 
 export const SchemaDiscoverResponse = Vts.object({
+    FriendlyName: Vts.string(),
+    Manufacturer: Vts.string(),
     DeviceAuth: Vts.string(),
     DeviceID: Vts.string(),
     FirmwareName: Vts.string(),

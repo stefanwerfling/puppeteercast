@@ -1,16 +1,16 @@
 import {Logger, ServiceAbstract, ServiceImportance, ServiceStatus, StringHelper} from 'figtree';
-import {HDHomeRun} from '../HDHomeRun/HDHomeRun.js';
+import {DLNA} from '../DLNA/DLNA.js';
 import {FfmpegService} from './FfmpegService.js';
 
 /**
- * HD Home Run Service
+ * DLNA Service
  */
-export class HDHomeRunService extends ServiceAbstract {
+export class DLNAService extends ServiceAbstract {
 
     /**
      * Service Name
      */
-    public static NAME = 'hdhomerun';
+    public static NAME = 'dlna';
 
     /**
      * Importance
@@ -18,17 +18,17 @@ export class HDHomeRunService extends ServiceAbstract {
     protected readonly _importance: ServiceImportance = ServiceImportance.Important;
 
     /**
-     * HD Home run
+     * DLNA
      * @protected
      */
-    protected _hdhomerun: HDHomeRun;
+    protected _dlna: DLNA;
 
     /**
      * Constructor
      */
     public constructor() {
-        super(HDHomeRunService.NAME, [FfmpegService.NAME]);
-        this._hdhomerun = new HDHomeRun();
+        super(DLNAService.NAME, [FfmpegService.NAME]);
+        this._dlna = new DLNA();
     }
 
     /**
@@ -39,13 +39,13 @@ export class HDHomeRunService extends ServiceAbstract {
         this._status = ServiceStatus.Progress;
 
         try {
-            await this._hdhomerun.start();
+            await this._dlna.start();
         } catch(error) {
             this._status = ServiceStatus.Error;
             this._inProcess = false;
 
             this._statusMsg = StringHelper.sprintf(
-                'HDHomeRunService::start: Error while create the HDHomeRun: %e',
+                'DLNAService::start: Error while create the DLNA: %e',
                 error
             );
 

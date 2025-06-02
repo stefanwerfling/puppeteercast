@@ -12,7 +12,7 @@ export class Device extends DefaultRoute {
 
     public getExpressRouter(): Router {
         this._get(
-            '/device.xml',
+            '/dms/device.xml',
             false,
             async(request, response): Promise<void> => {
                 const baseUrl = `${request.protocol}://${request.hostname}:5004`;
@@ -26,10 +26,10 @@ export class Device extends DefaultRoute {
                     `  <URLBase>${baseUrl}/</URLBase>`,
                     '  <device>',
                     '    <deviceType>urn:schemas-upnp-org:device:MediaServer:1</deviceType>',
-                    '    <friendlyName>HDHomeRun Emulator</friendlyName>',
-                    '    <manufacturer>Silicondust</manufacturer>',
-                    '    <modelName>HDHomeRun</modelName>',
-                    '    <modelNumber>HDTC-2US</modelNumber>',
+                    '    <friendlyName>PuppeteerCast MediaServer</friendlyName>',
+                    '    <manufacturer>PuppeteerCast</manufacturer>',
+                    '    <modelName>PuppeteerCast</modelName>',
+                    '    <modelNumber>V-1</modelNumber>',
                     '    <serialNumber>12345678</serialNumber>',
                     `    <UDN>uuid:${this._uuid}</UDN>`,
                     '  </device>',
@@ -40,7 +40,7 @@ export class Device extends DefaultRoute {
                 response.send(xml);
             },
             {
-                description: 'HDHomeRun device.xml'
+                description: 'DLNA device.xml'
             }
         );
 

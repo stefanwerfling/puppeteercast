@@ -1,4 +1,3 @@
-import { Logger } from 'figtree';
 import { Writable, PassThrough } from 'stream';
 export class BufferedStream extends Writable {
     _buffer = [];
@@ -11,7 +10,6 @@ export class BufferedStream extends Writable {
     }
     _write(chunk, _encoding, callback) {
         if (this._buffer.length >= this._maxChunks) {
-            Logger.getLogger().info(`BufferedStream:_write: clear buffer ${this._buffer.length} >= ${this._maxChunks}`);
             this._buffer.shift();
         }
         this._buffer.push(chunk);
