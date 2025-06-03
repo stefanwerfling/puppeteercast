@@ -30,7 +30,7 @@ export class Stream extends DefaultRoute {
                         backend.getChannelManager().callChannel(data.params.channel).then();
                     }
 
-                    const service = backend.getServiceList().getByName(FfmpegService.NAME);
+                    const service = backend.getServiceManager().getByName(FfmpegService.NAME);
 
                     if (service) {
                         if (service.getStatus() === ServiceStatus.Success) {

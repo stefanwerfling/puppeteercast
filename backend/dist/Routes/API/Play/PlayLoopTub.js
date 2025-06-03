@@ -5,7 +5,7 @@ export class PlayLoopTub {
     static async playMovie(param) {
         const backend = Backend.getInstance(Backend.NAME);
         if (backend) {
-            const service = backend.getServiceList().getByName(PuppeteerService.NAME);
+            const service = backend.getServiceManager().getByName(PuppeteerService.NAME);
             if (service) {
                 if (service.getStatus() === ServiceStatus.Success) {
                     const page = service.getPage();

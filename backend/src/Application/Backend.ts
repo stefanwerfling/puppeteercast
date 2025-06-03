@@ -59,14 +59,14 @@ export class Backend extends BackendApp<DefaultArgs, ConfigOptions> {
      * @protected
      */
     protected async _initServices(): Promise<void> {
-        this._serviceList.add(new PluginService(Backend.NAME));
-        this._serviceList.add(new XvfbService());
-        this._serviceList.add(new PulseAudioService());
-        this._serviceList.add(new PuppeteerService());
-        this._serviceList.add(new PactlService());
-        this._serviceList.add(new FfmpegService());
-        this._serviceList.add(new HttpService(RouteLoader));
-        this._serviceList.add(new DLNAService());
+        this._serviceManager.add(new PluginService(Backend.NAME));
+        this._serviceManager.add(new XvfbService());
+        this._serviceManager.add(new PulseAudioService());
+        this._serviceManager.add(new PuppeteerService());
+        this._serviceManager.add(new PactlService());
+        this._serviceManager.add(new FfmpegService());
+        this._serviceManager.add(new HttpService(RouteLoader));
+        this._serviceManager.add(new DLNAService());
     }
 
     /**

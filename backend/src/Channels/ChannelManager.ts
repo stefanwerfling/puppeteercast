@@ -58,7 +58,7 @@ export class ChannelManager {
             throw new Error('Internal error: Backend not found!');
         }
 
-        const service = backend.getServiceList().getByName(PuppeteerService.NAME);
+        const service = backend.getServiceManager().getByName(PuppeteerService.NAME);
 
         if (service === null) {
             throw new Error('Puppeteer-Service not found!');
