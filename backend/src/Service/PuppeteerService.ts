@@ -55,6 +55,7 @@ export class PuppeteerService extends ServiceAbstract {
             // @ts-ignore
             this._browse = await puppeteer.launch({
                 headless: false,
+                userDataDir: './my-profile',
                 executablePath: '/usr/bin/chromium',
                 env: {
                     DISPLAY: ':99',
@@ -86,7 +87,7 @@ export class PuppeteerService extends ServiceAbstract {
 
                     // other
                     '--enable-precise-memory-info',
-                    '--disable-features=Translate',
+                    '--disable-features=Translate,IsolateOrigins,site-per-process',
                     '--no-first-run',
                     '--disable-gpu',
                 ],
@@ -97,6 +98,13 @@ export class PuppeteerService extends ServiceAbstract {
 
             if (this._browse) {
                 this._page = new PuppeteerCastPage(await this._browse.newPage());
+
+                await this._page.getPage().evaluateOnNewDocument(() => {
+                    // eslint-disable-next-line no-undef
+                    Object.defineProperty(navigator, 'webdriver', {
+                        get: () => false,
+                    });
+                });
             }
         } catch(error) {
             this._status = ServiceStatus.Error;

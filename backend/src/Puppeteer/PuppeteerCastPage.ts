@@ -1,4 +1,4 @@
-import {Logger} from 'figtree';
+import {FileHelper, Logger} from 'figtree';
 import {ConsoleMessage, Page} from 'puppeteer';
 import {SelectorQueryable, SelectorWaiter} from './SelectorWaiter.js';
 
@@ -61,6 +61,38 @@ export class PuppeteerCastPage {
      */
     public async setUserAgent(userAgent: string): Promise<void> {
         await this._page.setUserAgent(userAgent);
+    }
+
+    /**
+     * Save cookies to file
+     * @param {string} file
+     */
+    public async saveCookies(file: string): Promise<void> {
+        const cookies = await this._page.browserContext().cookies();
+        const cookieJson = JSON.stringify(cookies, null, 2);
+
+        if (await FileHelper.fileExist(file)) {
+            await FileHelper.fileDelete(file);
+        }
+
+        await FileHelper.create(file, cookieJson);
+    }
+
+    /**
+     * Load cookies by file
+     * @param {string} file
+     * @return {boolean}
+     */
+    public async loadCookies(file: string): Promise<boolean> {
+        if (await FileHelper.fileExist(file)) {
+            const cookieStr = await FileHelper.fileRead(file);
+            const cookies = JSON.parse(cookieStr);
+            await this._page.browserContext().setCookie(...cookies);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

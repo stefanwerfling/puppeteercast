@@ -1,4 +1,4 @@
-import { Logger } from 'figtree';
+import { FileHelper, Logger } from 'figtree';
 import { SelectorWaiter } from './SelectorWaiter.js';
 export class PuppeteerCastPage {
     _page;
@@ -23,6 +23,23 @@ export class PuppeteerCastPage {
     }
     async setUserAgent(userAgent) {
         await this._page.setUserAgent(userAgent);
+    }
+    async saveCookies(file) {
+        const cookies = await this._page.browserContext().cookies();
+        const cookieJson = JSON.stringify(cookies, null, 2);
+        if (await FileHelper.fileExist(file)) {
+            await FileHelper.fileDelete(file);
+        }
+        await FileHelper.create(file, cookieJson);
+    }
+    async loadCookies(file) {
+        if (await FileHelper.fileExist(file)) {
+            const cookieStr = await FileHelper.fileRead(file);
+            const cookies = JSON.parse(cookieStr);
+            await this._page.browserContext().setCookie(...cookies);
+            return true;
+        }
+        return false;
     }
     getPage() {
         return this._page;

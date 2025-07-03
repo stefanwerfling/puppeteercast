@@ -10,8 +10,35 @@ export class PlayLoopTub {
                 if (service.getStatus() === ServiceStatus.Success) {
                     const page = service.getPage();
                     if (page) {
-                        await page.getPage().goto(`https://looptube.io/?videoId=${param.videoid}`, { waitUntil: 'networkidle2' });
+                        await page.getPage().goto('https://www.youtubeunblocked.live/', {
+                            waitUntil: 'networkidle2',
+                        });
                         try {
+                            await page.getPage().waitForSelector('button', {
+                                visible: true,
+                                timeout: 5000,
+                            });
+                            const buttons = await page.getPage().$$('button');
+                            for (const button of buttons) {
+                                const text = await page.getPage().evaluate(el => el.textContent, button);
+                                if (text?.toLowerCase().includes('consent') || text?.toLowerCase().includes('accept')) {
+                                    await button.click();
+                                    console.log('Consent-Button geklickt');
+                                    break;
+                                }
+                            }
+                            await new Promise(resolve => { setTimeout(resolve, 1000); });
+                        }
+                        catch (_e) {
+                            console.log(_e);
+                            console.log('Kein Consent-Button gefunden – vermutlich nicht nötig.');
+                        }
+                        try {
+                            await page.getPage().type('#url', `https://looptube.io/?videoId=${param.videoid}`, { delay: 50 });
+                            await Promise.all([
+                                page.getPage().waitForNavigation({ waitUntil: 'networkidle2' }),
+                                page.getPage().click('#requestSubmit'),
+                            ]);
                             await page.getPage().evaluate(() => {
                                 document.body.style.cursor = 'none';
                             });

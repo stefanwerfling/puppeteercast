@@ -1,4 +1,4 @@
-import {Config, ConfigBackend, ConfigBackendOptions, ConfigOptions, SchemaConfigBackendOptions} from 'figtree';
+import {Config, ConfigBackend, ConfigBackendOptions, SchemaConfigBackendOptions} from 'figtree';
 
 /**
  * Config
@@ -9,12 +9,12 @@ export class PuppeteerCastConfig extends ConfigBackend {
      * Return the Config instance
      * @return {Config}
      */
-    public static getInstance<I extends ConfigOptions>(): Config<I> {
+    public static getInstance(): PuppeteerCastConfig {
         if (!Config._instance) {
             Config._instance = new PuppeteerCastConfig(SchemaConfigBackendOptions);
         }
 
-        return Config._instance;
+        return Config._instance as PuppeteerCastConfig;
     }
 
     /**

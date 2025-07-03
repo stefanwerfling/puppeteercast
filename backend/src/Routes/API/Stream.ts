@@ -64,6 +64,7 @@ export class Stream extends DefaultRoute {
             },
             {
                 description: 'Current browser stream',
+                tags: ['stream'],
                 pathSchema: SchemaStreamRequestPath
             }
         );

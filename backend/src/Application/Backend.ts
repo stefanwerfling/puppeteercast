@@ -1,4 +1,4 @@
-import {BackendApp, ConfigOptions, DefaultArgs, Config, SchemaDefaultArgs, HttpService, PluginService} from 'figtree';
+import {BackendApp, ConfigOptions, DefaultArgs, SchemaDefaultArgs, HttpService, PluginService} from 'figtree';
 import {Schema} from 'vts';
 import {ChannelManager} from '../Channels/ChannelManager.js';
 import {PuppeteerCastConfig} from '../Config/PuppeteerCastConfig.js';
@@ -28,10 +28,10 @@ export class Backend extends BackendApp<DefaultArgs, ConfigOptions> {
 
     /**
      * Get config instacne
-     * @return {Config}
+     * @return {PuppeteerCastConfig}
      * @protected
      */
-    protected _getConfigInstance(): Config<ConfigOptions> {
+    protected _getConfigInstance(): PuppeteerCastConfig {
         const config = PuppeteerCastConfig.getInstance();
         config.setAppName(Backend.NAME);
         config.setAppTitle('PuppeteerCast');

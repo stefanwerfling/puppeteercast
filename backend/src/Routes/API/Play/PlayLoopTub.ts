@@ -16,9 +16,44 @@ export class PlayLoopTub {
                     const page = (service as PuppeteerService).getPage();
 
                     if (page) {
-                        await page.getPage().goto(`https://looptube.io/?videoId=${param.videoid}`, {waitUntil: 'networkidle2'});
+                        await page.getPage().goto('https://www.youtubeunblocked.live/', {
+                            waitUntil: 'networkidle2',
+                        });
 
                         try {
+                            await page.getPage().waitForSelector('button', {
+                                visible: true,
+                                timeout: 5000,
+                            });
+
+                            const buttons = await page.getPage().$$('button');
+
+                            for (const button of buttons) {
+                                // eslint-disable-next-line no-await-in-loop
+                                const text = await page.getPage().evaluate(el => el.textContent, button);
+
+                                if (text?.toLowerCase().includes('consent') || text?.toLowerCase().includes('accept')) {
+                                    // eslint-disable-next-line no-await-in-loop
+                                    await button.click();
+                                    console.log('Consent-Button geklickt');
+                                    break;
+                                }
+                            }
+
+                            await new Promise(resolve => {setTimeout(resolve, 1000);});
+                        } catch (_e) {
+                            console.log(_e);
+                            console.log('Kein Consent-Button gefunden – vermutlich nicht nötig.');
+                        }
+
+                        try {
+                            await page.getPage().type('#url', `https://looptube.io/?videoId=${param.videoid}`, { delay: 50 });
+
+                            await Promise.all([
+                                page.getPage().waitForNavigation({ waitUntil: 'networkidle2' }),
+                                page.getPage().click('#requestSubmit'),
+                            ]);
+
                             await page.getPage().evaluate(() => {
                                 // eslint-disable-next-line no-undef
                                 document.body.style.cursor = 'none';

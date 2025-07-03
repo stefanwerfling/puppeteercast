@@ -37,6 +37,7 @@ export class Stream extends DefaultRoute {
             res.end();
         }, {
             description: 'Current browser stream',
+            tags: ['stream'],
             pathSchema: SchemaStreamRequestPath
         });
         return super.getExpressRouter();
